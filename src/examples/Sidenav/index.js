@@ -12,8 +12,10 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-
+// Css 
+import styles from "./styles.css";
 import { useEffect } from "react";
+import React, { useState } from "react";
 
 // react-router-dom components
 import { useLocation, NavLink } from "react-router-dom";
@@ -34,7 +36,6 @@ import SoftButton from "components/SoftButton";
 
 // Soft UI Dashboard React examples
 import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
-import SidenavCard from "examples/Sidenav/SidenavCard";
 
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
@@ -44,6 +45,10 @@ import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
 import { useSoftUIController, setMiniSidenav } from "context";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
+    // Estado para el rol actual, con valor predeterminado de "cliente"
+  const [currentRole, setCurrentRole] = useState("cliente");
+
+
   const [controller, dispatch] = useSoftUIController();
   const { miniSidenav, transparentSidenav } = controller;
   const location = useLocation();
@@ -51,11 +56,20 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const collapseName = pathname.split("/").slice(1)[0];
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
+  const [isPropietarioActive, setIsPropietarioActive] = useState(true);
+
+  
+  const [isClienteActive, setIsClienteActive] = useState(true);
+
+  const toggleButton = () => {
+    setIsPropietarioActive(!isPropietarioActive);
+    setIsClienteActive(!isClienteActive);
+  };
 
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
     function handleMiniSidenav() {
-      setMiniSidenav(dispatch, window.innerWidth < 1200);
+      setMiniSidenav(dispatch, window.innerWidth < 1800);
     }
 
     /** 
@@ -71,7 +85,12 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }, [dispatch, location]);
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, route, href }) => {
+  const renderRoutes = routes
+  .filter((route) => {
+    // Filtra los elementos según el rol actual (Cliente o Propietario)
+    return isClienteActive ? route.isCP === 1 : route.isCP === 2;
+  })
+  .map(({ type, name, icon, title, noCollapse, key, route, href }) => {
     let returnValue;
 
     if (type === "collapse") {
@@ -129,7 +148,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   return (
     <SidenavRoot {...rest} variant="permanent" ownerState={{ transparentSidenav, miniSidenav }}>
-      <SoftBox pt={3} pb={1} px={4} textAlign="center">
+      <SoftBox pt={3} pb={1} px={5} textAlign="center">
         <SoftBox
           display={{ xs: "block", xl: "none" }}
           position="absolute"
@@ -142,44 +161,51 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           <SoftTypography variant="h6" color="secondary">
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </SoftTypography>
-        </SoftBox>
+        </SoftBox>        
         <SoftBox component={NavLink} to="/" display="flex" alignItems="center">
-          {brand && <SoftBox component="img" src={brand} alt="Soft UI Logo" width="2rem" />}
           <SoftBox
             width={!brandName && "100%"}
             sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}
           >
-            <SoftTypography component="h6" variant="button" fontWeight="medium">
-              {brandName}
-            </SoftTypography>
+            <h1 className="title">
+             {brandName}
+             </h1>
           </SoftBox>
         </SoftBox>
       </SoftBox>
       <Divider />
       <List>{renderRoutes}</List>
+      <Divider />
       <SoftBox pt={2} my={2} mx={2} mt="auto">
-        <SidenavCard />
-        <SoftBox mt={2}>
+      <SoftBox sx={(theme) => sidenavLogoLabel(theme, { miniSidenav })}>
+        {isPropietarioActive ? (
           <SoftButton
-            component="a"
-            href="https://creative-tim.com/product/soft-ui-dashboard-pro-react"
-            target="_blank"
-            rel="noreferrer"
-            variant="gradient"
             color={color}
+            variant={transparentSidenav ? "outlined" : "gradient"}
             fullWidth
+            onClick={toggleButton}
           >
-            upgrade to pro
+            Propietario
           </SoftButton>
-        </SoftBox>
+        ) : (
+          <SoftButton
+            color={color}
+            variant={transparentSidenav ? "outlined" : "gradient"}
+            fullWidth
+            onClick={toggleButton}
+          >
+            Cliente
+          </SoftButton>
+        )}
       </SoftBox>
+    </SoftBox>
     </SidenavRoot>
   );
 }
 
 // Setting default values for the props of Sidenav
 Sidenav.defaultProps = {
-  color: "info",
+  color: "secondary",
   brand: "",
 };
 
