@@ -3,7 +3,6 @@ name: Run deploy on aws
 on:
   push:
     branches:
-      - "DS-32-aws-workflow"
       - "main"
 
 
