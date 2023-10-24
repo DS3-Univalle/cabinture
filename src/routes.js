@@ -50,130 +50,116 @@ import Calendar from "examples/Icons/Calendar";
 import User from "examples/Icons/User";
 import Help from "examples/Icons/Help";
 import SignOff from "examples/Icons/SignOff";
+import SignIn from "layouts/authentication/sign-in";
+import SignUp from "layouts/authentication/sign-up";
+
 
 // Soft UI Dashboard reac Owners
 import Historical from "examples/Icons/Historical";
 import Cabin from "examples/Icons/Cabin";
 import ListCabin from "examples/Icons/ListCabin";
-const routes = [
-  {
-    type: "collapse",
-    name: "Inicio",
-    key: "dashboard",
-    route: "/dashboard",
-    icon: <Home size="20px" />,
-    component: <Dashboard />,
-    noCollapse: true,
-    isCP: 1,
-  },
-  {
-    type: "collapse",
-    name: "Mi Perfil",
-    key: "profile",
-    route: "/profile",
-    icon: <User size="25px" />,
-    component: <Custoner />,
-    noCollapse: true,
-    isCP: 1,
-  },
-  {
-    type: "collapse",
-    name: "Catálogo",
-    key: "tables",
-    route: "/tables",
-    icon: <Catalogue size="20px" />,
-    component: <Tables />,
-    noCollapse: true,
-    isCP: 1,
-  },
-  {
-    type: "collapse",
-    name: "Mis Reservas",
-    key: "billing",
-    route: "/billing",
-    icon: <Calendar size="25px" />,
-    component: <Billing />,
-    noCollapse: true,
-    isCP: 1,
-  },
-  {
-    type: "collapse",
-    name: "Inicio",
-    key: "dashboard",
-    route: "/dashboard",
-    icon: <Home size="20px" />,
-    component: <Dashboard />,
-    noCollapse: true,
-    isCP: 2,
-  },
-  {
-    type: "collapse",
-    name: "Mi Perfil",
-    key: "profile",
-    route: "/profile",
-    icon: <User size="25px" />,
-    component: <Custoner />,
-    noCollapse: true,
-    isCP: 2,
-  },
-  {
-    type: "collapse",
-    name: "Historico",
-    key: "rtl",
-    route: "/rtl",
-    icon: <Historical size="20px" />,
-    component: <RTL />,
-    noCollapse: true,
-    isCP: 2,
-  },{
-    type: "collapse",
-    name: "Crear Cabaña",
-    key: "6",
-    route: "",
-    icon: <Cabin size="20px" />,
-    component: "",
-    noCollapse: true,
-    isCP: 2,
-  },{
-    type: "collapse",
-    name: "Mis cabañas",
-    key: "7",
-    route: "",
-    icon: <ListCabin size="20px" />,
-    component: "",
-    noCollapse: true,
-    isCP: 2,
-  },{
-    type: "collapse",
-    name: "Mis Reservas",
-    key: "8",
-    route: "",
-    icon: <Calendar size="20px" />,
-    component: "",
-    noCollapse: true,
-    isCP: 2,
-  },
-  {
-    type: "collapse",
-    name: "Ayuda y Soporte",
-    key: "9",
-    route: "",
-    icon: <Help size="20px" />,
-    component: "",
-    noCollapse: true,
-    isCP: 2,
-  },
-  {
-    type: "collapse",
-    name: "Cerrar Sesión",
-    key: "0",
-    route: "",
-    icon: <SignOff size="20px" />,
-    component: "",
-    noCollapse: true,
-    isCP: 2,
-  }
-  
+import { MicNone } from "@mui/icons-material";
+// Soft UI Dashboard React icons
+import Shop from "examples/Icons/Shop";
+import Office from "examples/Icons/Office";
+import Settings from "examples/Icons/Settings";
+import Document from "examples/Icons/Document";
+import SpaceShip from "examples/Icons/SpaceShip";
+import CustomerSupport from "examples/Icons/CustomerSupport";
+import CreditCard from "examples/Icons/CreditCard";
+import Cube from "examples/Icons/Cube";
+
+const routes = [{
+  type: "collapse",
+  name: "Inicio",
+  key: "dashboard",
+  route: "/dashboard",
+  icon: <Home size="20px" />,
+  component: <Dashboard />,
+  noCollapse: true,
+  isCP: 1,
+},
+{
+  type: "collapse",
+  name: "Mi Perfil",
+  key: "profile",
+  route: "/profile",
+  icon: <User size="25px" />,
+  component: <Custoner />,
+  noCollapse: true,
+  isCP: 1,
+},
+{
+  type: "collapse",
+  name: "Catálogo",
+  key: "tables",
+  route: "/tables",
+  icon: <Catalogue size="20px" />,
+  component: <Tables />,
+  noCollapse: true,
+  isCP: 1,
+},
+{
+  type: "collapse",
+  name: "Mis Reservas",
+  key: "billing",
+  route: "/billing",
+  icon: <Calendar size="25px" />,
+  component: <Billing />,
+  noCollapse: true,
+  isCP: 1,
+},
+{
+  type: "collapse",
+  name: "Inicio",
+  key: "dashboard",
+  route: "/dashboard",
+  icon: <Home size="20px" />,
+  component: <Dashboard />,
+  noCollapse: true,
+  isCP: 2,
+},
+{
+  type: "collapse",
+  name: "Mi Perfil",
+  key: "profile",
+  route: "/profile",
+  icon: <User size="25px" />,
+  component: <Custoner />,
+  noCollapse: true,
+  isCP: 2,
+},
+{
+  type: "collapse",
+  name: "Historico",
+  key: "rtl",
+  route: "/rtl",
+  icon: <Historical size="20px" />,
+  component: <RTL />,
+  noCollapse: true,
+  isCP: 2,
+}
+,
+{
+  type: "collapse",
+  name: "Sign In",
+  key: "sign-in",
+  route: "/authentication/sign-in",
+  icon: <Document size="12px" />,
+  component: <SignIn />,
+  noCollapse: true,
+  isCP: 0,
+},
+{
+  type: "collapse",
+  name: "Sign Up",
+  key: "sign-up",
+  route: "/authentication/sign-up",
+  icon: <SpaceShip size="12px" />,
+  component: <SignUp />,
+  noCollapse: true, 
+  isCP: 0,
+},
 ];
 
 export default routes;
