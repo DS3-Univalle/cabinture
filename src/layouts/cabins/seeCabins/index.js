@@ -13,32 +13,98 @@ import axios from "axios";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
 import Carrusel from "layouts/dashboard/components/Carrusel";
-import { Card } from "@mui/material";
+import { Card, Modal } from "@mui/material";
 import Buscador from "layouts/dashboard/components/Buscador";
+import Swal from "sweetalert2";
 
 function SeeCabins() {
 
-  Swal.fire({
-    title: 'Do you want to save the changes?',
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: 'Save',
-    denyButtonText: `Don't save`,
-  }).then((result) => {
-    /* Read more about isConfirmed, isDenied below */
-    if (result.isConfirmed) {
-      Swal.fire('Saved!', '', 'success')
-    } else if (result.isDenied) {
-      Swal.fire('Changes are not saved', '', 'info')
+  const [state, setState] = useState({
+   id_state: null
+  });
+  const handleClickState = async (id) => {
+    e.preventDefault();
+    try {
+      await axios.post(`http://localhost:8080/cabin/state/${id}`, state);
+      console.log("done");
+    } catch (err) {
+      console.log(err);
     }
-  })
+  };
 
+  const handleClick = async (state, cabin) => {
+    let confirmButtonText, denyButtonText, cancelButtonText;
+    let confirmButtonColor, denyButtonColor, cancelButtonColor;
+  
+    const buttonOptions = [
+      {
+        text: 'Disponible',
+        color: 'green',
+        id: 1,
+      },
+      {
+        text: 'Reservada',
+        color: 'green',
+        id: 2,
+      },
+      {
+        text: 'Mantenimiento',
+        color: 'green',
+        id: 3,
+      },
+      {
+        text: 'Cerrada temporalmente',
+        color: 'green',
+        id: 4,
+      }
+    ];
+  
+    // Determine the button options based on the current state
+    const currentButtonOption = buttonOptions.find((option) => option.text === state);
+    const otherButtonOptions = buttonOptions.filter((option) => option.text !== state);
+  
+    confirmButtonText = otherButtonOptions[0].text;
+    confirmButtonColor = otherButtonOptions[0].color;
+    denyButtonText = otherButtonOptions[1].text;
+    denyButtonColor = otherButtonOptions[1].color;
+    cancelButtonText = otherButtonOptions[2].text;
+    cancelButtonColor = otherButtonOptions[2].color;
+  
+    const { value: selectedButtonText } = await Swal.fire({
+      title: `Cambiar estado de cabaña ${cabin}`,
+      text: `Estado Actual: ${state}`,
+      showCancelButton: true,
+      showConfirmButton: true,
+      showDenyButton: true,
+      confirmButtonText,
+      confirmButtonColor,
+      denyButtonText,
+      denyButtonColor,
+      cancelButtonText,
+      cancelButtonColor,
+    });
+  
+    if (selectedButtonText) {
+      const selectedButton = buttonOptions.find((option) => option.text === selectedButtonText);
+      const selectedId = selectedButton.id;
+      console.log(selectedId);
+      console.log('selectedButtonText:', selectedButtonText);
+console.log('buttonOptions:', buttonOptions);
+
+      Swal.fire(`El estado de la cabaña ha sido cambiado a: ${selectedButtonText} with ID ${selectedId}`, '', 'success');
+    }
+  };
+  
+  
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const [cabañas, setCabañas] = useState([]);
   console.log(cabañas);
   useEffect(() => {
     const fetchAllCabañas = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/cabins");
+        const res = await axios.get("http://localhost:8080/cabins");
         setCabañas(res.data);
       } catch (err) {
         console.log(err);
@@ -52,7 +118,7 @@ function SeeCabins() {
     // Create a function to fetch cabin states by cabin ID
     const fetchCabinState = async (id) => {
       try {
-        const response = await axios.get(`http://localhost:8000/cabins/states/${id}`);
+        const response = await axios.get(`http://localhost:8080/cabins/states/${id}`);
         setCabinStates((prevState) => ({
           ...prevState,
           [id]: response.data,
@@ -75,7 +141,7 @@ function SeeCabins() {
     <SoftBox mt={4}>
       <SoftBox my={3}>
         <Grid item xs={12} md={5}>
-          <Buscador />
+          {/* <Buscador /> */}
         </Grid>
         {cabañas.map((cabin) => (
           <Grid container spacing={3} mt={3} key={cabin.id_cabin}>
@@ -99,7 +165,9 @@ function SeeCabins() {
                       {cabinStates[cabin.id_cabin] && cabinStates[cabin.id_cabin].map((s) => (
                         <Grid item xs={12} md={3} key={s.id_state}>
                           <SoftBox display="flex" justifyContent="center">
-                            <SoftButton
+                            <SoftButton onClick={() => {
+          setModalOpen(true);
+        }}
                               className="softButtonCustomColor"
                               style={{
                                 backgroundColor: "#71C455",
@@ -107,6 +175,7 @@ function SeeCabins() {
                                 width: "100%",
                               }}
                             >
+                               {modalOpen && <Modal setModalOpen={setModalOpen} />}
                               &nbsp;{s.state}
                             </SoftButton>
                           </SoftBox>
