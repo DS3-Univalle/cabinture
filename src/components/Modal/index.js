@@ -1,15 +1,14 @@
 import React from "react";
 import "./Modal.css";
-import PropTypes from 'prop-types';
 
-const Modal = ( {setModalOpen}) => {
+function Modal({ setOpenModal }) {
   return (
     <div className="modalBackground">
       <div className="modalContainer">
         <div className="titleCloseBtn">
           <button
             onClick={() => {
-              setModalOpen(false);
+              setOpenModal(false);
             }}
           >
             X
@@ -24,7 +23,7 @@ const Modal = ( {setModalOpen}) => {
         <div className="footer">
           <button
             onClick={() => {
-              setModalOpen(false);
+              setOpenModal(false);
             }}
             id="cancelBtn"
           >
@@ -37,6 +36,6 @@ const Modal = ( {setModalOpen}) => {
   );
 }
 Modal.propTypes = {
-  setModalOpen: PropTypes.element.isRequired
+  setOpenModal: PropTypes.func.isRequired,
 };
 export default Modal;
