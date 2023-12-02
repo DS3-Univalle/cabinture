@@ -1,0 +1,218 @@
+@import "~react-image-gallery/styles/css/image-gallery.css";
+
+
+.my-component-container body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.my-component-container code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+
+.my-component-container header {
+  background-color: #5c0080;
+  margin-bottom: 4rem;
+}
+
+.header-wrapper {
+  max-width: 1024px;
+  margin: 0 auto;
+  display: flex;
+  padding: 1rem 0;
+  color: #ffffff;
+}
+
+.header-wrapper h1 {
+  font-size: 2rem;
+}
+
+.image-gallery-wrapper {
+  margin-top: 5rem;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  
+}
+
+@media only screen  {
+  .header-wrapper {
+    border-radius: 18px;
+    border: 3px solid #82d616;
+  }
+}@media (hover: hover) and (pointer: fine) {
+  .image-gallery-thumbnail:hover,
+  .image-gallery-thumbnail:focus,
+  button.image-gallery-thumbnail.active:hover {
+    border-radius: 15px !important;
+    border: 3px solid #82d616 !important;
+  }
+
+  @media (hover: hover) and (pointer: fine){
+  .image-gallery-thumbnail:hover, 
+  .image-gallery-thumbnail:focus, button.image-gallery-thumbnail.active:hover {
+      border-radius: 18px !important;
+      border: 3px solid #82d616 !important;
+  }
+}
+  button.image-gallery-thumbnail.active:hover {
+    border-radius: 17px  !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .image-gallery-thumbnail.active,
+  .image-gallery-thumbnail:focus {
+    border: 3px solid #337ab7;
+  }
+}
+button.image-gallery-thumbnail {
+  border: 3px solid #82d616;
+  border-radius: 18px;
+}
+button.image-gallery-thumbnail.active {
+  border: 3px solid #82d616;
+  border-radius: 18px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .image-gallery-thumbnail.active,
+  .image-gallery-thumbnail:focus {
+    outline: none;
+  }
+}
+
+
+
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+.my-component-container html,
+.my-component-container body,
+.my-component-container div,
+.my-component-container span,
+.my-component-container applet,
+.my-component-container object,
+.my-component-container iframe,
+.my-component-container p,
+.my-component-container blockquote,
+.my-component-container pre,
+.my-component-container a,
+.my-component-container abbr,
+.my-component-container acronym,
+.my-component-container address,
+.my-component-container big,
+.my-component-container cite,
+.my-component-container code,
+.my-component-container del,
+.my-component-container dfn,
+.my-component-container em,
+.my-component-container img,
+.my-component-container ins,
+.my-component-container kbd,
+.my-component-container q,
+.my-component-container s,
+.my-component-container samp,
+.my-component-container small,
+.my-component-container strike,
+.my-component-container strong,
+.my-component-container sub,
+.my-component-container sup,
+.my-component-container tt,
+.my-component-container var,
+.my-component-container b,
+.my-component-container u,
+.my-component-container i,
+.my-component-container center,
+.my-component-container dl,
+.my-component-container dt,
+.my-component-container dd,
+.my-component-container ol,
+.my-component-container ul,
+.my-component-container li,
+.my-component-container fieldset,
+.my-component-container form,
+.my-component-container label,
+.my-component-container legend,
+.my-component-container table,
+.my-component-container caption,
+.my-component-container tbody,
+.my-component-container tfoot,
+.my-component-container thead,
+.my-component-container tr,
+.my-component-container th,
+.my-component-container td,
+.my-component-container article,
+.my-component-container aside,
+.my-component-container canvas,
+.my-component-container details,
+.my-component-container embed,
+.my-component-container figure,
+.my-component-container figcaption,
+.my-component-container footer,
+.my-component-container header,
+.my-component-container hgroup,
+.my-component-container menu,
+.my-component-container nav,
+.my-component-container output,
+.my-component-container ruby,
+.my-component-container section,
+.my-component-container summary,
+.my-component-container time,
+.my-component-container mark,
+.my-component-container audio,
+.my-component-container video {
+  border-radius:15px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+.my-component-container article,
+.my-component-container aside,
+.my-component-container details,
+.my-component-container figcaption,
+.my-component-container figure,
+.my-component-container footer,
+.my-component-container header,
+.my-component-container hgroup,
+.my-component-container menu,
+.my-component-container nav,
+.my-component-container section {
+  display: block;
+}
+.my-component-container body {
+  line-height: 1;
+}
+.my-component-container ol,
+.my-component-container ul {
+  list-style: none;
+}
+.my-component-container blockquote,
+.my-component-container q {
+  quotes: none;
+}
+.my-component-container blockquote:before,
+.my-component-container blockquote:after,
+.my-component-container q:before,
+.my-component-container q:after {
+  content: "";
+  content: none;
+}
+.my-component-container table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
