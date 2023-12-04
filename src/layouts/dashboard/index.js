@@ -9,7 +9,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import styles from "../dashboard/components/styles.css";
 
-import Buscador from "./components/Buscador";
+import Buscador from "./components/Buscador Fechas";
 import Carrusel from "./components/Carrusel";
 
 function Dashboard() {

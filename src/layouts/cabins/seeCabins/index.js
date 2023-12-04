@@ -13,60 +13,78 @@ import axios from "axios";
 
 import SoftTypography from "components/SoftTypography";
 
-import { Card, Modal } from "@mui/material";
-import Buscador from "layouts/dashboard/components/Buscador";
+import { Card, Checkbox, Modal } from "@mui/material";
 import styles from "./index.css";
+import BuscadorCabanas from "layouts/dashboard/components/Buscador cabanas";
+import SoftInput from "components/SoftInput";
+import Swal from "sweetalert2";
 
 function SeeCabins() {
-
   const handleClickState = async (id, st) => {
     try {
       await axios.put(`http://localhost:8080/cabin/state/${id}`, st);
-      fetchAllCabañas(); 
-      setModalOpen(false)
+      if (!isChecked) {
+        fetchAllCabañas();
+      } else {
+        fetchAllCabañasState();
+      }
+      Swal.fire({
+        icon: "success",
+        title: "Estado actualizado con éxito",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setModalOpen(false);
     } catch (err) {
       console.log(err);
     }
   };
+  const [selectedStates, setSelectedStates] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+  const [ids, setIds] = useState([]);
+  const handleCheckboxChange = (stateId) => {
+    setChecked((prevChecked) => {
+      const updatedChecked = prevChecked.includes(stateId)
+        ? prevChecked.filter((id) => id !== stateId)
+        : [...prevChecked, stateId];
 
-  const handleClick = async (state, cabin) => {};
+      setIsChecked(updatedChecked.length > 0);
+
+      return updatedChecked;
+    });
+  };
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [cabañas, setCabañas] = useState([]);
-  console.log(cabañas);
-  const fetchAllCabañas = async () => {
+  const fetchAllCabañasState = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/cabins");
+      const res = await axios.get(
+        `http://localhost:8080/cabins-filtered-by-states?${"id=" + checked.join("&id=")}`
+      );
       setCabañas(res.data);
+
+      console.log(res.data);
     } catch (err) {
       console.log(err);
     }
   };
-  useEffect(() => {
-    const fetchAllCabañas = async () => {
+
+  const fetchAllCabañas = async () => {
+    if (!isChecked) {
       try {
         const res = await axios.get("http://localhost:8080/cabins");
         setCabañas(res.data);
       } catch (err) {
         console.log(err);
       }
-    };
-    fetchAllCabañas();
-  }, []);
-  const [cabinStates, setCabinStates] = useState([]);
-  const [cabinId, setCabinId] = useState(0);
-
-  const fetchCabinById = async (id) => {
-    try {
-      const res = await axios.get(`http://localhost:8080/cabin/${id}`);
-      setCabañas([res.data]);
-      console.log("yay"); // Assuming that the response is a single cabin object
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
     }
   };
+  useEffect(() => {
+    fetchAllCabañas();
+  }, [isChecked]);
+  const [cabinStates, setCabinStates] = useState([]);
+  const [cabinId, setCabinId] = useState(0);
 
   useEffect(() => {
     // Create a function to fetch cabin states by cabin ID
@@ -87,8 +105,14 @@ function SeeCabins() {
     });
   }, [cabañas]);
 
-  console.log(cabañas);
-  console.log(cabinStates);
+  const swal = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Estado actualizado con éxito",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
   return (
     <DashboardLayout>
       {modalOpen && (
@@ -118,7 +142,7 @@ function SeeCabins() {
             <div className="footer">
               <button
                 onClick={() => {
-                  console.log(cabinId)
+                  // console.log(cabinId)
                   handleClickState(cabinId, { id_state: 2 });
                 }}
                 id="cancelBtn"
@@ -160,8 +184,70 @@ function SeeCabins() {
           <SoftBox mt={4}>
             <SoftBox my={3}>
               <Grid item xs={12} md={5}>
+                <Card id="delete-account">
+                  <SoftBox p={3} display="flex" justifyContent="flex-start">
+                    <Grid container spacing={0}>
+                      <Grid item xs={10} md={2}>
+                        <SoftBox pr={1} style={{ width: "100%" }}>
+                          <SoftInput
+                            placeholder="Cabaña"
+                            icon={{ component: "search", direction: "left" }}
+                          />
+                        </SoftBox>
+                      </Grid>
+                      <Grid item xs={12} md={2}>
+                        <SoftBox display="flex" justifyContent="center">
+                          <SoftButton
+                            className="softButtonCustomColor"
+                            style={{ backgroundColor: "#71C455", color: "white", width: "100%" }}
+                          >
+                            &nbsp;Buscar
+                          </SoftButton>
+                        </SoftBox>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <SoftBox pl={1} style={{ width: "100%" }}>
+                          <Checkbox
+                            checked={checked.includes(1)}
+                            onChange={() => handleCheckboxChange(1)}
+                          />
+                          <label style={{ fontSize: "14px" }}>Disponible </label>
+
+                          <Checkbox
+                            checked={checked.includes(3)}
+                            onChange={() => handleCheckboxChange(3)}
+                          />
+                          <label style={{ fontSize: "14px" }}>Mantenimiento </label>
+
+                          <Checkbox
+                            checked={checked.includes(2)}
+                            onChange={() => handleCheckboxChange(2)}
+                          />
+                          <label style={{ fontSize: "14px" }}>Reservada </label>
+
+                          <Checkbox
+                            checked={checked.includes(4)}
+                            onChange={() => handleCheckboxChange(4)}
+                          />
+                          <label style={{ fontSize: "14px" }}>Cerrada temporalmente </label>
+                        </SoftBox>
+                      </Grid>
+                      <Grid item xs={12} md={2}>
+                        <SoftBox
+                          display="flex"
+                          justifyContent="center"
+                          onClick={fetchAllCabañasState}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <h1 className="green-text">APLICAR FILTRO</h1>
+                        </SoftBox>
+                      </Grid>
+                    </Grid>
+                  </SoftBox>
+                </Card>
                 {/* <Buscador /> */}
               </Grid>
+
               {cabañas.map((cabin) => (
                 <Grid container spacing={3} mt={3} key={cabin.id_cabin}>
                   <Grid item xs={12} md={13}>
@@ -188,7 +274,7 @@ function SeeCabins() {
                                     <SoftButton
                                       onClick={() => {
                                         setCabinId(s.id_cabin);
-                                        console.log("THIS IS THE ID" + s.id_cabin);
+                                        // console.log("THIS IS THE ID" + s.id_cabin);
                                         setModalOpen(true);
                                       }}
                                       className="softButtonCustomColor"
