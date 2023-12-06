@@ -9,6 +9,7 @@ import SoftTypography from "components/SoftTypography";
 import TimelineItem from "examples/Timeline/TimelineItem";
 import { useEffect, useRef, useState } from "react";
 import { data } from './data';
+import Gallery from "react-image-gallery";
 
 function Carrusel() {
   const listRef = useRef();
