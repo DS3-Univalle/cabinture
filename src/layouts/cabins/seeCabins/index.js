@@ -3,13 +3,14 @@ import Icon from "@mui/material/Icon";
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
-
+import Carrusel from "layouts/dashboard/components/Carrusel";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import SoftButton from "components/SoftButton";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 import SoftTypography from "components/SoftTypography";
 
@@ -20,6 +21,9 @@ import SoftInput from "components/SoftInput";
 import Swal from "sweetalert2";
 
 function SeeCabins() {
+
+  const navigate = useNavigate();
+
   const handleClickState = async (id, st) => {
     try {
       await axios.put(`http://localhost:8080/cabin/state/${id}`, st);
@@ -247,55 +251,66 @@ function SeeCabins() {
                 </Card>
                 {/* <Buscador /> */}
               </Grid>
-
-              {cabañas.map((cabin) => (
-                <Grid container spacing={3} mt={3} key={cabin.id_cabin}>
-                  <Grid item xs={12} md={13}>
-                    <Card sx={{ height: "100%" }}>
-                      <SoftBox pt={3} pb={2} px={2}>
-                        <SoftBox
-                          component="ul"
-                          display="flex"
-                          flexDirection="column"
-                          p={0}
-                          m={0}
-                          sx={{ listStyle: "none" }}
-                        >
-                          <SoftBox>
-                            <SoftBox mb={1} ml={0.5}>
-                              <SoftTypography component="label" variant="caption" fontWeight="bold">
-                                Nombre Cabaña: {cabin.name}
-                              </SoftTypography>
+              <Grid container spacing={3} mt={1}>
+                {cabañas.map((cabin) => (
+                  <Grid item xs={12} key={cabin.id_cabin}>
+                    <Card>
+                      <SoftBox pt={1} pb={1} px={1} display="flex">
+                        <SoftBox mb={1} ml={1} mr={1}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold">
+                            <Carrusel />
+                          </SoftTypography>
+                        </SoftBox>
+                        <SoftBox mb={1} ml={1} mr={1}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold">
+                            Nombre Cabaña: {cabin.name}
+                          </SoftTypography>
+                        </SoftBox>
+                        <SoftBox mb={1} ml={1} mr={1}>
+                          {cabinStates[cabin.id_cabin] &&
+                            cabinStates[cabin.id_cabin].map((s) => (
+                              <Grid item xs={12} md={12} key={s.id_state}>
+                                <SoftBox >
+                                  <SoftButton
+                                    onClick={() => {
+                                      setCabinId(s.id_cabin);
+                                      setModalOpen(true);
+                                    }}
+                                    className="softButtonCustomColor"
+                                    style={{
+                                      backgroundColor: "#71C455",
+                                      color: "white",
+                                      width: "100%",
+                                    }}
+                                  >
+                                    &nbsp;{s.state}  { cabin.id_cabin }
+                                  </SoftButton>
+                                </SoftBox>
+                              </Grid>
+                            ))}
+                          <Grid item xs={12} md={12} mb={1} mt={2}>
+                            <SoftBox >
+                              <SoftButton
+                                className="softButtonCustomColor"
+                                style={{
+                                  backgroundColor: "#71C455",
+                                  color: "white",
+                                  width: "100%",
+                                }}
+                                onClick={() => {
+                                  navigate("/AgregarCabana", { state: { cabinId: cabin.id_cabin } });
+                                }}
+                              >
+                                &nbsp;Editar
+                              </SoftButton>
                             </SoftBox>
-                            {cabinStates[cabin.id_cabin] &&
-                              cabinStates[cabin.id_cabin].map((s) => (
-                                <Grid item xs={12} md={3} key={s.id_state}>
-                                  <SoftBox display="flex" justifyContent="center">
-                                    <SoftButton
-                                      onClick={() => {
-                                        setCabinId(s.id_cabin);
-                                        // console.log("THIS IS THE ID" + s.id_cabin);
-                                        setModalOpen(true);
-                                      }}
-                                      className="softButtonCustomColor"
-                                      style={{
-                                        backgroundColor: "#71C455",
-                                        color: "white",
-                                        width: "100%",
-                                      }}
-                                    >
-                                      &nbsp;{s.state}
-                                    </SoftButton>
-                                  </SoftBox>
-                                </Grid>
-                              ))}
-                          </SoftBox>
+                          </Grid>
                         </SoftBox>
                       </SoftBox>
                     </Card>
                   </Grid>
-                </Grid>
-              ))}
+                ))}
+              </Grid>
             </SoftBox>
           </SoftBox>
         </div>
