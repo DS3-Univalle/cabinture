@@ -22,7 +22,7 @@ import Swal from "sweetalert2";
 import ReactImageGallery from "react-image-gallery";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 
 function SeeCabins() {
   const defaultImages = [
@@ -34,15 +34,15 @@ function SeeCabins() {
     },
   ];
   const storage = getStorage();
-  
+
   const [modalOpen, setModalOpen] = useState(false);
   const [cabañas, setCabañas] = useState([]);
 
-// Specify the folder path
-const folderPath = '12345/';
+  // Specify the folder path
+  const folderPath = "12345/";
 
-// Get a reference to the folder
-const folderRef = ref(storage, folderPath);
+  // Get a reference to the folder
+  const folderRef = ref(storage, folderPath);
   const [imageList, setImageList] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const imageListRef = ref(storage, "12345/");
@@ -67,14 +67,14 @@ const folderRef = ref(storage, folderPath);
         if (result.items.length > 0) {
           const firstItem = result.items[0];
           const url = await getDownloadURL(firstItem);
-          console.log('First Image URL:', id, url);
+          console.log("First Image URL:", id, url);
           return url;
         } else {
-          console.log('No images found for folder:', id);
+          console.log("No images found for folder:", id);
           return null;
         }
       } catch (error) {
-        console.error('Error getting first image:', error);
+        console.error("Error getting first image:", error);
         return null;
       }
     };
@@ -101,8 +101,6 @@ const folderRef = ref(storage, folderPath);
       );
       setImageUrls(urls);
     };
-
-    
   }, []);
   const navigate = useNavigate();
 
@@ -339,11 +337,15 @@ const folderRef = ref(storage, folderPath);
                         <SoftBox mb={1} ml={1} mr={1}>
                           <SoftTypography component="label" variant="caption" fontWeight="bold">
                             <div className="app">
-                            <div className="my-component-container">
-                            {cabinImages[cabin.id_cabin] && (
-                        <img src={cabinImages[cabin.id_cabin]} alt={`Cabin ${cabin.id_cabin}`} style={{ width: '200px', height: '100px', objectFit: 'cover' }}/>
-                      )}
-                    </div>
+                              <div className="my-component-container">
+                                {cabinImages[cabin.id_cabin] && (
+                                  <img
+                                    src={cabinImages[cabin.id_cabin]}
+                                    alt={`Cabin ${cabin.id_cabin}`}
+                                    style={{ width: "200px", height: "100px", objectFit: "cover" }}
+                                  />
+                                )}
+                              </div>
                             </div>
                           </SoftTypography>
                         </SoftBox>

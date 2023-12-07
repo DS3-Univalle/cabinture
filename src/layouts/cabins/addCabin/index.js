@@ -25,23 +25,16 @@ import ImageGallery from "react-image-gallery";
 
 function AddCabinComponent() {
   const [imageUpload, setImageUpload] = useState(false);
-  const [imageList, setImageList] = useState([]);
   const imageListRef = ref(storage, "images/");
+  const [id, setId] = useState();
+  const [fotosSubidas, setFotosSubidas] = useState(false);
   const defaultImages = [
     {
       original: "https://cytonus.com/wp-content/themes/native/assets/images/no_image_resized_675-450.jpg",
       thumbnail: "https://cytonus.com/wp-content/themes/native/assets/images/no_image_resized_675-450.jpg",
     },
   ];
-  useEffect(() => {
-    listAll(imageListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          setImageList((prev) => [...prev, url]);
-        });
-      });
-    });
-  }, []);
+
   const [selectedImages, setSelectedImages] = useState([]);
   const [images, setImages] = useState([]);
 
@@ -78,6 +71,7 @@ function AddCabinComponent() {
       Promise.all(uploadPromises)
         .then(() => {
           console.log("All images uploaded successfully");
+          setFotosSubidas(true)
         })
         .catch((error) => {
           console.error("Error uploading images:", error);
@@ -113,6 +107,71 @@ function AddCabinComponent() {
       timer: 1500,
     });
   };
+  const folderPath = `${cabin.id_cabin}/`;
+  const folderRef = ref(storage, folderPath);
+  const [imageUrls, setImageUrls] = useState([]);
+
+  const subirFotosBD = () => {
+    if (fotosSubidas) {
+      // sube fotos a bd pero se debe buscar en fb primero
+      // obtiene array de url de firebase
+      listAll(folderRef)
+        .then((result) => {
+          // result.items is an array of references to each image in the folder
+          const downloadURLs = [];
+    
+          // Loop through each item and get the download URL
+          result.items.forEach((itemRef) => {
+            const photoName = itemRef.name.split('/').pop(); // Extract the file name from the full path
+    
+            getDownloadURL(itemRef)
+              .then((url) => {
+                // Add the download URL to your array
+                downloadURLs.push({ url, name: photoName });
+    
+                // You can use the URLs for displaying images or any other purpose
+                console.log('Download URL:', url);
+    
+                // Make a request to the backend to insert the current photo URL into the database
+                axios.post('http://localhost:8080/photos', {
+                  url_photo: url,
+                  id_cabin: cabin.id_cabin,
+                  id_state: 1,
+                  name_photo: photoName,
+                })
+                  .then((response) => {
+                    console.log(response.data);
+                  })
+                  .catch((error) => {
+                    console.error('Error making request to /photos:', error);
+                  });
+              })
+              .catch((error) => {
+                console.error('Error getting download URL:', error);
+              });
+          });
+    
+          // After all URLs are fetched, update the state with the array of URLs
+          setImageUrls(downloadURLs);
+          console.log('All Image URLs:', downloadURLs);
+        })
+        .catch((error) => {
+          console.error('Error listing items in the folder:', error);
+        });
+    }
+    
+   }
+  useEffect(() => {
+    subirFotosBD()
+  }, [fotosSubidas]);
+
+
+
+
+
+
+
+
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -123,6 +182,7 @@ function AddCabinComponent() {
         },
       });
       setCabin(response.data);
+     
       showAlert("success", "Registro guardado con éxito");
       setButtonsState(false, true, true);
     } catch (err) {
