@@ -19,9 +19,91 @@ import styles from "./index.css";
 import BuscadorCabanas from "layouts/dashboard/components/Buscador cabanas";
 import SoftInput from "components/SoftInput";
 import Swal from "sweetalert2";
+import ReactImageGallery from "react-image-gallery";
+import { storage } from "../firebase";
+import { v4 } from "uuid";
+import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
 
 function SeeCabins() {
+  const defaultImages = [
+    {
+      original:
+        "https://cytonus.com/wp-content/themes/native/assets/images/no_image_resized_675-450.jpg",
+      thumbnail:
+        "https://cytonus.com/wp-content/themes/native/assets/images/no_image_resized_675-450.jpg",
+    },
+  ];
+  const storage = getStorage();
+  
+  const [modalOpen, setModalOpen] = useState(false);
+  const [cabañas, setCabañas] = useState([]);
 
+// Specify the folder path
+const folderPath = '12345/';
+
+// Get a reference to the folder
+const folderRef = ref(storage, folderPath);
+  const [imageList, setImageList] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
+  const imageListRef = ref(storage, "12345/");
+  const [cabinImages, setCabinImages] = useState({});
+  // useEffect(() => {
+  //   const fetchCabinImages = async () => {
+  //     const images = {};
+  //     for (const cabin of cabañas) {
+  //       const imageUrl = await getFirstImage(cabin.id_cabin);
+  //       images[cabin.id_cabin] = imageUrl;
+  //     }
+  //     setCabinImages(images);
+  //   };
+
+  //   fetchCabinImages();
+  // }, [cabañas]);
+  useEffect(() => {
+    const getFirstImage = async (id) => {
+      const imageListRef = ref(storage, `${id}/`);
+      try {
+        const result = await listAll(imageListRef);
+        if (result.items.length > 0) {
+          const firstItem = result.items[0];
+          const url = await getDownloadURL(firstItem);
+          console.log('First Image URL:', id, url);
+          return url;
+        } else {
+          console.log('No images found for folder:', id);
+          return null;
+        }
+      } catch (error) {
+        console.error('Error getting first image:', error);
+        return null;
+      }
+    };
+
+    const fetchCabinImages = async () => {
+      const images = {};
+      for (const cabin of cabañas) {
+        const imageUrl = await getFirstImage(cabin.id_cabin);
+        images[cabin.id_cabin] = imageUrl;
+      }
+      setCabinImages(images);
+    };
+
+    fetchCabinImages();
+  }, [cabañas]);
+
+  useEffect(() => {
+    const fetchImageUrls = async () => {
+      const urls = await Promise.all(
+        cabañas.map(async (cabin) => {
+          const url = await getFirstImage(cabin.id_cabin);
+          return { id: cabin.id_cabin, url };
+        })
+      );
+      setImageUrls(urls);
+    };
+
+    
+  }, []);
   const navigate = useNavigate();
 
   const handleClickState = async (id, st) => {
@@ -59,8 +141,6 @@ function SeeCabins() {
     });
   };
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [cabañas, setCabañas] = useState([]);
   const fetchAllCabañasState = async () => {
     try {
       const res = await axios.get(
@@ -258,7 +338,13 @@ function SeeCabins() {
                       <SoftBox pt={1} pb={1} px={1} display="flex">
                         <SoftBox mb={1} ml={1} mr={1}>
                           <SoftTypography component="label" variant="caption" fontWeight="bold">
-                            <Carrusel />
+                            <div className="app">
+                            <div className="my-component-container">
+                            {cabinImages[cabin.id_cabin] && (
+                        <img src={cabinImages[cabin.id_cabin]} alt={`Cabin ${cabin.id_cabin}`} style={{ width: '200px', height: '100px', objectFit: 'cover' }}/>
+                      )}
+                    </div>
+                            </div>
                           </SoftTypography>
                         </SoftBox>
                         <SoftBox mb={1} ml={1} mr={1}>
@@ -270,7 +356,7 @@ function SeeCabins() {
                           {cabinStates[cabin.id_cabin] &&
                             cabinStates[cabin.id_cabin].map((s) => (
                               <Grid item xs={12} md={12} key={s.id_state}>
-                                <SoftBox >
+                                <SoftBox>
                                   <SoftButton
                                     onClick={() => {
                                       setCabinId(s.id_cabin);
@@ -283,13 +369,13 @@ function SeeCabins() {
                                       width: "100%",
                                     }}
                                   >
-                                    &nbsp;{s.state}  { cabin.id_cabin }
+                                    &nbsp;{s.state} {cabin.id_cabin}
                                   </SoftButton>
                                 </SoftBox>
                               </Grid>
                             ))}
                           <Grid item xs={12} md={12} mb={1} mt={2}>
-                            <SoftBox >
+                            <SoftBox>
                               <SoftButton
                                 className="softButtonCustomColor"
                                 style={{
@@ -298,7 +384,9 @@ function SeeCabins() {
                                   width: "100%",
                                 }}
                                 onClick={() => {
-                                  navigate("/AgregarCabana", { state: { cabinId: cabin.id_cabin } });
+                                  navigate("/AgregarCabana", {
+                                    state: { cabinId: cabin.id_cabin },
+                                  });
                                 }}
                               >
                                 &nbsp;Editar
