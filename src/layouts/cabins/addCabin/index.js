@@ -1,4 +1,6 @@
 import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
@@ -18,7 +20,19 @@ import { Card } from "@mui/material";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 
-function AddCabinComponent() {
+
+//import { useParams } from "react-router-dom";
+
+function AddCabinComponent(props) {
+  const location = useLocation();
+  const cabinId = location.state?.cabinId || null;
+  const [agregarBTN, setAgregarBTN] = useState(true);
+  const [eliminarBTN, setEliminarBTN] = useState(false);
+  const [ActualizarBTN, setActualizarBTN] = useState(false);
+  const [address, setAddress] = useState("");
+  const handleAddressChange = (newAddress) => {setAddress(newAddress);};
+
+
   const [cabin, setCabin] = useState({
     id_cabin: "",
     name: "",
@@ -31,7 +45,7 @@ function AddCabinComponent() {
     number_people: null,
     id_state: 3
   });
-
+  
   const handleChange = (e) => {
     setCabin((prev) => ({
       ...prev,
@@ -119,14 +133,26 @@ function AddCabinComponent() {
     setActualizarBTN(update);
   };
 
-  const [agregarBTN, setAgregarBTN] = useState(true);
-  const [eliminarBTN, setEliminarBTN] = useState(false);
-  const [ActualizarBTN, setActualizarBTN] = useState(false);
 
-  const [address, setAddress] = useState("");
-  const handleAddressChange = (newAddress) => {
-    setAddress(newAddress);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (cabinId) {
+          const response = await axios.get(`http://localhost:8081/cabin?cabinID=${cabinId}`);
+          setCabin(response.data);
+          handleAddressChange(response.data.location); // Llama a handleAddressChange con la nueva ubicación
+          setButtonsState(false, true, true);
+        }
+      } catch (error) {
+        console.error("Error al cargar los detalles de la cabaña:", error);
+        console.error("Response:", error.response); // Imprime la respuesta completa de Axios
+      }
+    };
+
+    fetchData();
+  }, [cabinId]); 
+
+
 
   return (
     <DashboardLayout>
@@ -142,7 +168,7 @@ function AddCabinComponent() {
               <Card sx={{ height: "100%" }}>
                 <SoftBox pt={3} pb={2} px={2}>
                   <SoftBox component="ul" display="flex" flexDirection="column" p={0} m={0} sx={{ listStyle: "none" }}>
-                    <SoftBox>
+                    <SoftBox style={{ display: "none" }}>
                       <SoftBox mb={1} ml={0.5}>
                         <SoftTypography component="label" variant="caption" fontWeight="bold">
                           Cod Cabaña

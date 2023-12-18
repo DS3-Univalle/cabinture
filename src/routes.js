@@ -110,6 +110,7 @@ const routes = [{
   route: "/AgregarCabana",
   icon: <AddCabin size="20px" />,
   component: <AddCabinComponent />,
+  render: (props) => <AddCabinComponent {...props} />,
   noCollapse: true,
   isCP: 2,
 },
