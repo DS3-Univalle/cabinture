@@ -48,6 +48,7 @@ import Home from "examples/Icons/Home";
 import Catalogue from "examples/Icons/Catalogue";
 import Calendar from "examples/Icons/Calendar";
 import User from "examples/Icons/User";
+import AddCabin from "examples/Icons/AddCabin";
 import Help from "examples/Icons/Help";
 import SignOff from "examples/Icons/SignOff";
 import SignIn from "layouts/authentication/sign-in";
@@ -65,9 +66,9 @@ import Office from "examples/Icons/Office";
 import Settings from "examples/Icons/Settings";
 import Document from "examples/Icons/Document";
 import SpaceShip from "examples/Icons/SpaceShip";
-import CustomerSupport from "examples/Icons/CustomerSupport";
-import CreditCard from "examples/Icons/CreditCard";
-import Cube from "examples/Icons/Cube";
+
+import SeeCabins from "layouts/cabins/seeCabins";
+import AddCabinComponent from "layouts/cabins/addCabin";
 
 const routes = [{
   type: "collapse",
@@ -136,6 +137,27 @@ const routes = [{
   route: "/rtl",
   icon: <Historical size="20px" />,
   component: <RTL />,
+  noCollapse: true,
+  isCP: 2,
+},
+{
+  type: "collapse",
+  name: "Añadir Cabaña",
+  key: "addCabin",
+  route: "/AgregarCabana",
+  icon: <AddCabin size="20px" />,
+  component: <AddCabinComponent />,
+  render: (props) => <AddCabinComponent {...props} />,
+  noCollapse: true,
+  isCP: 2,
+},
+{
+  type: "collapse",
+  name: "Mis Cabañas",
+  key: "myCabins",
+  route: "/myCabins",
+  icon: <Cabin size="20px" />,
+  component: <SeeCabins />,
   noCollapse: true,
   isCP: 2,
 }

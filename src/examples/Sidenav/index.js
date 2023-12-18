@@ -88,7 +88,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const renderRoutes = routes
   .filter((route) => {
     // Filtra los elementos según el rol actual (Cliente o Propietario)
-    return isClienteActive ? route.isCP === 1 : route.isCP === 2;
+    return isClienteActive ? route.isCP === 1 ||  route.isCP === 0 : route.isCP === 2 ||  route.isCP === 0;
   })
   .map(({ type, name, icon, title, noCollapse, key, route, href }) => {
     let returnValue;
