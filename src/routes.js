@@ -32,7 +32,6 @@ import SpaceShip from "examples/Icons/SpaceShip";
 
 import SeeCabins from "layouts/cabins/seeCabins";
 import AddCabinComponent from "layouts/cabins/addCabin";
-
 const routes = [{
   type: "collapse",
   name: "Inicio",
