@@ -1,4 +1,6 @@
 import Grid from "@mui/material/Grid";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
@@ -6,7 +8,7 @@ import SoftButton from "components/SoftButton";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Carrusel2 from "layouts/dashboard/components/Carrusel2";
 import AddIMG from "layouts/dashboard/components/AddIMG";
@@ -79,6 +81,17 @@ function AddCabinComponent() {
     }
   }, [imageUpload, images]);
 
+//import { useParams } from "react-router-dom";
+
+  const location = useLocation();
+  const cabinId = location.state?.cabinId || null;
+  const [agregarBTN, setAgregarBTN] = useState(true);
+  const [eliminarBTN, setEliminarBTN] = useState(false);
+  const [ActualizarBTN, setActualizarBTN] = useState(false);
+  const [address, setAddress] = useState("");
+  const handleAddressChange = (newAddress) => {setAddress(newAddress);};
+
+
   const [cabin, setCabin] = useState({
     id_cabin: "",
     name: "",
@@ -91,7 +104,7 @@ function AddCabinComponent() {
     number_people: null,
     id_state: 3,
   });
-
+  
   const handleChange = (e) => {
     setCabin((prev) => ({
       ...prev,
@@ -256,14 +269,26 @@ function AddCabinComponent() {
     setActualizarBTN(update);
   };
 
-  const [agregarBTN, setAgregarBTN] = useState(true);
-  const [eliminarBTN, setEliminarBTN] = useState(false);
-  const [ActualizarBTN, setActualizarBTN] = useState(false);
 
-  const [address, setAddress] = useState("");
-  const handleAddressChange = (newAddress) => {
-    setAddress(newAddress);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (cabinId) {
+          const response = await axios.get(`http://localhost:8081/cabin?cabinID=${cabinId}`);
+          setCabin(response.data);
+          handleAddressChange(response.data.location); // Llama a handleAddressChange con la nueva ubicación
+          setButtonsState(false, true, true);
+        }
+      } catch (error) {
+        console.error("Error al cargar los detalles de la cabaña:", error);
+        console.error("Response:", error.response); // Imprime la respuesta completa de Axios
+      }
+    };
+
+    fetchData();
+  }, [cabinId]); 
+
+
 
   return (
     <DashboardLayout>
