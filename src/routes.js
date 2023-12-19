@@ -72,6 +72,7 @@ import Cube from "examples/Icons/Cube";
 
 
 import SeeCabins from "layouts/cabins/seeCabins";
+import SeeCabins2 from "layouts/cabins/seeCabin2";
 import AddCabinComponent from "layouts/cabins/addCabin";
 const routes = [{
   type: "collapse",
@@ -93,13 +94,14 @@ const routes = [{
   noCollapse: true,
   isCP: 1,
 },
+
 {
   type: "collapse",
   name: "Catálogo",
   key: "tables",
   route: "/tables",
   icon: <Catalogue size="20px" />,
-  component: <Tables />,
+  component: <SeeCabins2 />,
   noCollapse: true,
   isCP: 1,
 },
