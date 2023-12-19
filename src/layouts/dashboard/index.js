@@ -21,11 +21,11 @@ function Dashboard() {
         <SoftBox mb={3}>
           <Grid container spacing={3}></Grid>
         </SoftBox>
-        <SoftBox mb={3} mt={5}>
-          <Grid container spacing={1}>
+        <SoftBox mb={20} mt={5}>
+          <Grid container spacing={2}>
             <Grid item xs={12} lg={7} style={{ position: "relative" }}>
               <h1 className="inicio">Encuentra la cabaña</h1>
-              <h1 className="green-text">perfecta.</h1>
+              <h1 className="green-text" style={{fontSize:40}}>perfecta.</h1>
               <span>Con Cabinture, encontrar cabañas jamás había sido tan fácil y confiable</span>
               {/* BUSCADOR (make it larger) */}
               <Buscador style={{ width: "100%", height: "400px" }} />
@@ -34,7 +34,7 @@ function Dashboard() {
               {/* CARRUSEL (move it to the right) */}
               {/* <div style={{ position: "relative" }}> */}
                 {/* <div style={{ width: "50%", float: "right" }}> */}
-                  <Carrusel  />
+                  <Carrusel />
                 {/* </div> */}
               {/* </div> */}
             </Grid>

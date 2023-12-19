@@ -69,7 +69,7 @@ function Footer({ company, links }) {
         by
         <Link href={href} target="_blank">
           <SoftTypography variant="button" fontWeight="medium">
-            &nbsp;{name}&nbsp;
+            &nbsp;Univalle&nbsp;
           </SoftTypography>
         </Link>
         for a better web.
@@ -99,12 +99,12 @@ function Footer({ company, links }) {
 
 // Setting default values for the props of Footer
 Footer.defaultProps = {
-  company: { href: "https://www.creative-tim.com/", name: "Creative Tim" },
+  company: { href: "#", name: "" },
   links: [
-    { href: "https://www.creative-tim.com/", name: "Creative Tim" },
-    { href: "https://www.creative-tim.com/presentation", name: "About Us" },
-    { href: "https://www.creative-tim.com/blog", name: "Blog" },
-    { href: "https://www.creative-tim.com/license", name: "License" },
+    { href: "#", name: "" },
+    { href: "#", name: "About Us" },
+    { href: "#", name: "Blog" },
+    { href: "#", name: "License" },
   ],
 };
 

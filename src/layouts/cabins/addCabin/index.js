@@ -30,6 +30,7 @@ function AddCabinComponent() {
   const imageListRef = ref(storage, "images/");
   const [id, setId] = useState();
   const [fotosSubidas, setFotosSubidas] = useState(false);
+  const [cabañas, setCabañas] = useState([]);
   const defaultImages = [
     {
       original: "https://cytonus.com/wp-content/themes/native/assets/images/no_image_resized_675-450.jpg",
@@ -38,6 +39,7 @@ function AddCabinComponent() {
   ];
 
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImages2, setSelectedImages2] = useState();
   const [images, setImages] = useState([]);
 
   const handleImageChange = (e) => {
@@ -81,7 +83,7 @@ function AddCabinComponent() {
     }
   }, [imageUpload, images]);
 
-//import { useParams } from "react-router-dom";
+  //import { useParams } from "react-router-dom";
 
   const location = useLocation();
   const cabinId = location.state?.cabinId || null;
@@ -89,7 +91,7 @@ function AddCabinComponent() {
   const [eliminarBTN, setEliminarBTN] = useState(false);
   const [ActualizarBTN, setActualizarBTN] = useState(false);
   const [address, setAddress] = useState("");
-  const handleAddressChange = (newAddress) => {setAddress(newAddress);};
+  const handleAddressChange = (newAddress) => { setAddress(newAddress); };
 
 
   const [cabin, setCabin] = useState({
@@ -104,7 +106,7 @@ function AddCabinComponent() {
     number_people: null,
     id_state: 3,
   });
-  
+
   const handleChange = (e) => {
     setCabin((prev) => ({
       ...prev,
@@ -132,19 +134,19 @@ function AddCabinComponent() {
         .then((result) => {
           // result.items is an array of references to each image in the folder
           const downloadURLs = [];
-    
+
           // Loop through each item and get the download URL
           result.items.forEach((itemRef) => {
             const photoName = itemRef.name.split('/').pop(); // Extract the file name from the full path
-    
+
             getDownloadURL(itemRef)
               .then((url) => {
                 // Add the download URL to your array
                 downloadURLs.push({ url, name: photoName });
-    
+
                 // You can use the URLs for displaying images or any other purpose
                 console.log('Download URL:', url);
-    
+
                 // Make a request to the backend to insert the current photo URL into the database
                 axios.post('http://localhost:8080/photos', {
                   url_photo: url,
@@ -163,7 +165,7 @@ function AddCabinComponent() {
                 console.error('Error getting download URL:', error);
               });
           });
-    
+
           // After all URLs are fetched, update the state with the array of URLs
           setImageUrls(downloadURLs);
           console.log('All Image URLs:', downloadURLs);
@@ -172,8 +174,8 @@ function AddCabinComponent() {
           console.error('Error listing items in the folder:', error);
         });
     }
-    
-   }
+
+  }
   useEffect(() => {
     subirFotosBD()
   }, [fotosSubidas]);
@@ -195,11 +197,10 @@ function AddCabinComponent() {
         },
       });
       setCabin(response.data);
-     
+      setImageUpload(true);
       showAlert("success", "Registro guardado con éxito");
       setButtonsState(false, true, true);
     } catch (err) {
-      setImageUpload(true);
       console.log(err);
       showAlert("error", "Error al guardar el registro");
     }
@@ -286,9 +287,38 @@ function AddCabinComponent() {
     };
 
     fetchData();
-  }, [cabinId]); 
+  }, [cabinId]);
 
+  useEffect(() => {
+    const getFirstImage = async (id) => {
+      const imageListRef = ref(storage, `${cabinId}/`);
+      try {
+        const result = await listAll(imageListRef);
+        if (result.items.length > 0) {
+          const firstItem = result.items[0];
+          const url = await getDownloadURL(firstItem);
+          console.log("First Image URL:", id, url);
 
+          return url;
+        } else {
+          console.log("No images found for folder:", id);
+          return null;
+        }
+      } catch (error) {
+        console.error("Error getting first image:", error);
+        return null;
+      }
+    };
+
+    const fetchImageForId1 = async () => {
+      const imageUrlForId1 = await getFirstImage(1);
+      console.log("Image URL for ID 1:", imageUrlForId1);
+      setSelectedImages2(imageUrlForId1)
+      // Puedes hacer lo que necesites con la URL, por ejemplo, mostrar la imagen en tu interfaz de usuario.
+    };
+
+    fetchImageForId1();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -299,10 +329,10 @@ function AddCabinComponent() {
             <Grid item xs={12} md={5}>
               <div className="app">
                 <div className="my-component-container">
-                  {selectedImages.length > 0 ? (
-                    <ImageGallery items={selectedImages} />
+                  {cabinId ? (
+                    <img style={{ width: "100%", height: "300px", objectFit: "cover" }} src={selectedImages2} alt="Selected Image" />
                   ) : (
-                    <ImageGallery items={defaultImages} />
+                    <ImageGallery items={selectedImages.length > 0 ? selectedImages : defaultImages} />
                   )}
                 </div>
               </div>
@@ -319,6 +349,7 @@ function AddCabinComponent() {
                     p={0}
                     m={0}
                     sx={{ listStyle: "none" }}
+                    style={{ display: "none" }}
                   >
                     <SoftBox>
                       <SoftBox mb={1} ml={0.5}>
@@ -536,7 +567,7 @@ function AddCabinComponent() {
                         <AddIMG
                           imageUpload={imageUpload}
                           handleRemoveImage={handleRemoveImage}
-                          id_cabin={cabin.id_cabin}
+                          id_cabin={cabin.id_cabin.toString()}
                           handleImageChange={handleImageChange}
                           selectedImages={selectedImages}
                         />

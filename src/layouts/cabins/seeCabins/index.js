@@ -11,7 +11,8 @@ import SoftButton from "components/SoftButton";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import DefaultInfoCard from "examples/Cards/InfoCards/DefaultInfoCard";
 import SoftTypography from "components/SoftTypography";
 
 import { Card, Checkbox, Modal } from "@mui/material";
@@ -195,6 +196,14 @@ function SeeCabins() {
       timer: 1500,
     });
   };
+  const formatCurrency = (value) => {
+    return Number(value).toLocaleString('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
   return (
     <DashboardLayout>
       {modalOpen && (
@@ -329,11 +338,11 @@ function SeeCabins() {
                 </Card>
                 {/* <Buscador /> */}
               </Grid>
-              <Grid container spacing={3} mt={1}>
+              <Grid container spacing={4} mt={1}>
                 {cabañas.map((cabin) => (
                   <Grid item xs={12} key={cabin.id_cabin}>
                     <Card>
-                      <SoftBox pt={1} pb={1} px={1} display="flex">
+                      <SoftBox pt={3} pb={0} px={2} display="flex">
                         <SoftBox mb={1} ml={1} mr={1}>
                           <SoftTypography component="label" variant="caption" fontWeight="bold">
                             <div className="app">
@@ -342,23 +351,37 @@ function SeeCabins() {
                                   <img
                                     src={cabinImages[cabin.id_cabin]}
                                     alt={`Cabin ${cabin.id_cabin}`}
-                                    style={{ width: "200px", height: "100px", objectFit: "cover" }}
+                                    style={{ width: "250px", height: "100%", objectFit: "cover" }}
                                   />
                                 )}
                               </div>
                             </div>
                           </SoftTypography>
                         </SoftBox>
-                        <SoftBox mb={1} ml={1} mr={1}>
-                          <SoftTypography component="label" variant="caption" fontWeight="bold">
-                            Nombre Cabaña: {cabin.name}
+                        <SoftBox mb={3} ml={5} mr={2}>
+                          <SoftTypography component="label" variant="caption" fontWeight="bold" alignItems="center">
+
+                            <h1 style={{ fontFamily: "'Patua One', serif" }}>{cabin.name}</h1>
+                            <LocationOnIcon style={{ fontSize: '40', }} /> {cabin.location}
+                            <br />
+                            <span style={{
+                              fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+                              fontSize: '13px',
+                              fontWeight: 400,
+                              lineHeight: 1.625,
+                              letterSpacing: '0.00938em'
+                            }}>
+                              {cabin.description}
+                              <h1 className="green-text" style={{fontSize:"20px"}}> Valor {formatCurrency(cabin.price)} </h1>
+                            </span>
+
                           </SoftTypography>
                         </SoftBox>
-                        <SoftBox mb={1} ml={1} mr={1}>
+                        <SoftBox mb={1} ml={1} mr={1} style={{ width: "200px", marginLeft: "auto" }}>
                           {cabinStates[cabin.id_cabin] &&
                             cabinStates[cabin.id_cabin].map((s) => (
                               <Grid item xs={12} md={12} key={s.id_state}>
-                                <SoftBox>
+                                <SoftBox tyle={{ marginLeft: "auto" }}>
                                   <SoftButton
                                     onClick={() => {
                                       setCabinId(s.id_cabin);
@@ -371,13 +394,13 @@ function SeeCabins() {
                                       width: "100%",
                                     }}
                                   >
-                                    &nbsp;{s.state} {cabin.id_cabin}
+                                    &nbsp;{s.state}
                                   </SoftButton>
                                 </SoftBox>
                               </Grid>
                             ))}
                           <Grid item xs={12} md={12} mb={1} mt={2}>
-                            <SoftBox>
+                            <SoftBox >
                               <SoftButton
                                 className="softButtonCustomColor"
                                 style={{

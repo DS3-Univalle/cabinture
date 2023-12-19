@@ -27,7 +27,7 @@ import SoftTypography from "components/SoftTypography";
 
 function DefaultInfoCard({ color, icon, title, description, value }) {
   return (
-    <Card>
+
       <SoftBox p={2} mx={3} display="flex" justifyContent="center">
         <SoftBox
           display="grid"
@@ -44,23 +44,7 @@ function DefaultInfoCard({ color, icon, title, description, value }) {
           <Icon fontSize="default">{icon}</Icon>
         </SoftBox>
       </SoftBox>
-      <SoftBox pb={2} px={2} textAlign="center" lineHeight={1.25}>
-        <SoftTypography variant="h6" fontWeight="medium" textTransform="capitalize">
-          {title}
-        </SoftTypography>
-        {description && (
-          <SoftTypography variant="caption" color="text" fontWeight="regular">
-            {description}
-          </SoftTypography>
-        )}
-        {description && !value ? null : <Divider />}
-        {value && (
-          <SoftTypography variant="h5" fontWeight="medium">
-            {value}
-          </SoftTypography>
-        )}
-      </SoftBox>
-    </Card>
+   
   );
 }
 
